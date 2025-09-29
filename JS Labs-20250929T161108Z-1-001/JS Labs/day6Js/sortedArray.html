@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Day 6 Js</title>
+  <style>
+    body {
+      padding: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    
+   
+
+
+  </style>
+</head>
+<body>
+  <table id="dataTable">
+    <thead>
+      <tr>
+        <th>Name 
+          <button class="sort" onclick="sortTable(0)">^</button>
+        </th>
+        <th>Position 
+          <button class="sort" onclick="sortTable(1)">^</button>
+        </th>
+        <th>Office 
+          <button class="sort" onclick="sortTable(2)">^</button>
+        </th>
+        <th>Age 
+          <button class="sort" onclick="sortTable(3, 'num')">^</button>
+        </th>
+        <th>Start date 
+          <button class="sort" onclick="sortTable(4, 'date')">^</button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Airi Satou</td><td>Accountant</td><td>Tokyo</td><td>33</td><td>2008/11/28</td></tr>
+
+      <tr><td>Angelica Ramos</td><td>Chief Executive Officer (CEO)</td><td>London</td><td>47</td><td>2009/10/09</td></tr>
+
+      <tr><td>Ashton Cox</td><td>Junior Technical Author</td><td>San Francisco</td><td>66</td><td>2009/01/12</td></tr>
+
+      <tr><td>Bradley Greer</td><td>Software Engineer</td><td>London</td><td>41</td><td>2012/10/13</td></tr>
+
+      <tr><td>Brenden Wagner</td><td>Software Engineer</td><td>San Francisco</td><td>28</td><td>2011/06/07</td></tr>
+
+      <tr><td>Brielle Williamson</td><td>Integration Specialist</td><td>New York</td><td>61</td><td>2012/12/02</td></tr>
+
+      <tr><td>Bruno Nash</td><td>Software Engineer</td><td>London</td><td>38</td><td>2011/05/03</td></tr>
+
+      <tr><td>Caesar Vance</td><td>Pre-Sales Support</td><td>New York</td><td>21</td><td>2011/12/12</td></tr>
+
+      <tr><td>Cara Stevens</td><td>Sales Assistant</td><td>New York</td><td>46</td><td>2011/12/06</td></tr>
+
+      <tr><td>Cedric Kelly</td><td>Senior Javascript Developer</td><td>Edinburgh</td><td>22</td><td>2012/03/29</td></tr>
+    </tbody>
+  </table>
+  <script>
+let sortDirection = {};
+
+function sortTable(colIndex, type = "text") {
+    const table = document.getElementById("dataTable");
+    const rows = Array.from(table.rows).slice(1); 
+    const dir = sortDirection[colIndex] === "asc" ? "desc" : "asc";
+    sortDirection[colIndex] = dir;
+
+    rows.sort((a, b) => {
+        let A = a.cells[colIndex].innerText.trim();
+        let B = b.cells[colIndex].innerText.trim();
+
+        if (type === "num") {
+            A = Number(A);
+            B = Number(B);
+        } else if (type === "date") {
+            A = new Date(A);
+            B = new Date(B);
+        }
+
+        if (A < B) return dir === "asc" ? -1 : 1;
+        if (A > B) return dir === "asc" ? 1 : -1;
+        return 0;
+    });
+
+    
+    rows.forEach(row => table.tBodies[0].appendChild(row));
+}
+
+
+    
+  </script>
+
+</body>
+</html>

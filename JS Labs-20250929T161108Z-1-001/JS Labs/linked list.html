@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title> Linked List</title>
+  <style>
+    body{
+      margin:0; padding:24px;
+      background: #0f172a;
+      color:#e5e7eb;
+    }
+    h1{margin:0 0 12px 0; font-weight:800}
+    .row{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+    input{padding:10px 12px; border-radius:10px; border:1px solid #334155; background:#0b1224; color:#e5e7eb}
+    button{padding:10px 12px; border-radius:999px; border:1px solid #334155; background:#0b1224; color:#e5e7eb; cursor:pointer; font-weight:600}
+    button:hover{border-color:#22d3ee; box-shadow:0 0 0 3px #22d3ee33}
+
+    .list{display:flex; gap:12px; margin-top:18px; flex-wrap:wrap}
+    .node{
+      --c: #22d3ee;
+      background: var(--c);
+      color: #0b1020;
+      padding:10px 14px; border-radius:10px; border:1px solid rgba(0,0,0,.25);
+      box-shadow: 0 10px 20px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.15);
+      transform: translateY(0) scale(1);
+      transition: transform .18s ease, box-shadow .18s ease;
+      animation: pop .35s ease;
+      user-select:none;
+    }
+    .node:hover{ transform: translateY(-2px) scale(1.02); box-shadow: 0 14px 28px rgba(0,0,0,.35) }
+    .arrow{ align-self:center; color:#94a3b8 }
+
+    @keyframes pop{ from{ transform: translateY(6px) scale(.95); opacity:.0 } to{ transform: translateY(0) scale(1); opacity:1 } }
+  </style>
+</head>
+<body>
+  <h1> Linked List</h1>
+
+  <div class="row" style="margin-bottom:10px">
+    <input type="text" id="value" placeholder="Value" />
+    <input type="number" id="index" placeholder="Index" />
+    <button onclick="appendNode()">Append</button>
+    <button onclick="prependNode()">Prepend</button>
+    <button onclick="insertNode()">Insert At</button>
+    <button onclick="removeAtNode()">Remove At</button>
+    <button onclick="clearList()">Clear</button>
+  </div>
+
+  <div class="list" id="list"></div>
+
+  <script>
+    class Node { constructor(value, next=null, color=null){ this.value=value; this.next=next; this.color=color; } }
+    class LinkedList {
+      constructor(){ this.head=null; this.size=0; }
+      append(value){ const node=new Node(value, null, randColor()); if(!this.head){ this.head=node; } else { let c=this.head; while(c.next) c=c.next; c.next=node; } this.size++; }
+      prepend(value){ this.head=new Node(value, this.head, randColor()); this.size++; }
+      insertAt(value, index){ if(index<0 || index>this.size) return; if(index===0){ this.prepend(value); return; } let cur=this.head, prev=null, i=0; while(i<index){ prev=cur; cur=cur.next; i++; } const node=new Node(value, cur, randColor()); prev.next=node; this.size++; }
+      removeAt(index){ if(index<0 || index>=this.size) return; let cur=this.head; if(index===0){ this.head=cur.next; } else { let prev=null, i=0; while(i<index){ prev=cur; cur=cur.next; i++; } prev.next=cur.next; } this.size--; }
+      clear(){ this.head=null; this.size=0; }
+      toArray(){ const a=[]; let c=this.head; while(c){ a.push(c.value); c=c.next; } return a; }
+    }
+
+    function randColor(){
+      const h = Math.floor(Math.random()*360);
+      const s = 70; 
+      const l = 55; 
+      return `hsl(${h} ${s}% ${l}%)`;
+    }
+
+    const list = new LinkedList();
+    const listDiv = document.getElementById('list');
+
+    function render(){
+      listDiv.innerHTML='';
+      let current=list.head;
+      while(current){
+        const nodeDiv=document.createElement('div');
+        nodeDiv.className='node';
+        nodeDiv.style.setProperty('--c', current.color || randColor());
+        nodeDiv.textContent=current.value;
+        listDiv.appendChild(nodeDiv);
+        if(current.next){
+          const arrow=document.createElement('div');
+          arrow.className='arrow'; arrow.textContent='→';
+          listDiv.appendChild(arrow);
+        }
+        current=current.next;
+      }
+    }
+
+    function appendNode(){ const val=document.getElementById('value').value; list.append(val); render(); }
+    function prependNode(){ const val=document.getElementById('value').value; list.prepend(val); render(); }
+    function insertNode(){ const val=document.getElementById('value').value; const idx=parseInt(document.getElementById('index').value); list.insertAt(val, idx); render(); }
+    function removeAtNode(){ const idx=parseInt(document.getElementById('index').value); list.removeAt(idx); render(); }
+    function clearList(){ list.clear(); render(); }
+    function randomizeColors(){ let c=list.head; while(c){ c.color=randColor(); c=c.next; } render(); }
+
+    render();
+  </script>
+</body>
+</html>
